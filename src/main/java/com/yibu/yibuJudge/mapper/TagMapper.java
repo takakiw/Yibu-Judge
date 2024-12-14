@@ -27,4 +27,6 @@ public interface TagMapper {
     List<Tag> list();
 
     List<Integer> getTagIdByIds(@Param("tagIds") List<Integer> tagIds);
+
+    void deleteProblemTag(@Param("ids") List<Integer> ids);
 }

@@ -18,6 +18,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -39,24 +40,39 @@ public class ProblemCaseService {
     }
 
     public void insertBatch(List<TestcaseDTO> testcases) {
+        if (testcases == null || testcases.isEmpty()){
+            return;
+        }
         List<Testcase> testcaseList = new ArrayList<>();
         int i = 0;
+        Integer problemId = testcases.get(0).getProblemId();
+        if (problemId == null){
+            throw new BaseException(ProblemConstants.TESTCASE_PROBLEM_ID_NULL_ERROR);
+        }
+        String inputDir = fileProperties.getCaseInPath() + "/" + problemId;
+        String outputDir = fileProperties.getCaseOutPath() + "/" + problemId;
+        FileUtil.mkdir(inputDir);
+        FileUtil.mkdir(outputDir);
         try {
             for (i = 0; i < testcases.size(); i++) {
                 TestcaseDTO testcaseDTO = testcases.get(i);
+                if (testcaseDTO.getProblemId() == null){
+                    throw new BaseException(ProblemConstants.TESTCASE_PROBLEM_ID_NULL_ERROR);
+                }
                 Testcase testcase = new Testcase();
                 testcase.setProblemId(testcaseDTO.getProblemId());
                 testcase.setInputDesc(testcaseDTO.getInputDesc());
                 testcase.setOutputDesc(testcaseDTO.getOutputDesc());
-                try(FileOutputStream inOutputStream = new FileOutputStream( fileProperties.getCaseInPath()+ "/" + testcaseDTO.getProblemId() + "/" + i + ".text");
-                    FileOutputStream OutOutputStream = new FileOutputStream( fileProperties.getCaseOutPath() + "/" + testcaseDTO.getProblemId() + "/" + i + ".text")){
+                String index = UUID.randomUUID().toString().replace("-", "");
+                try(FileOutputStream inOutputStream = new FileOutputStream( inputDir + "/" + index + ".txt");
+                    FileOutputStream OutOutputStream = new FileOutputStream( outputDir + "/" + index + ".txt")){
                     IoUtil.writeUtf8(inOutputStream, true, testcaseDTO.getInputData());
                     IoUtil.writeUtf8(OutOutputStream, true, testcaseDTO.getOutputData());
                 }catch (Exception e){
                     throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);
                 }
-                testcase.setInputPath(fileProperties.getCaseInPath() + "/" + testcaseDTO.getProblemId() + "/" + i + ".text");
-                testcase.setOutputPath(fileProperties.getCaseOutPath() + "/" + testcaseDTO.getProblemId() + "/" + i + ".text");
+                testcase.setInputPath(inputDir + "/" + index + ".txt");
+                testcase.setOutputPath(outputDir + "/" + index + ".txt");
                 testcaseList.add(testcase);
             }
             int result = problemCaseMapper.insertBatch(testcaseList);
@@ -64,11 +80,8 @@ public class ProblemCaseService {
                 throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);
             }
         } catch (Exception e){
-            // 删除已保存的测试用例
-            for (int j = 0; j < i; j++) {
-                FileUtil.del(fileProperties.getCaseInPath() + "/" + testcases.get(j).getProblemId() + "/" + j + ".text");
-                FileUtil.del(fileProperties.getCaseOutPath() + "/" + testcases.get(j).getProblemId() + "/" + j + ".text");
-            }
+            FileUtil.del(inputDir);
+            FileUtil.del(outputDir);
             throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);
         }
     }
@@ -139,29 +152,20 @@ public class ProblemCaseService {
         dbTestcase.setId(id);
         if (StringUtils.isNotBlank(inputDesc)) dbTestcase.setInputDesc(inputDesc);
         if (StringUtils.isNotBlank(outputDesc)) dbTestcase.setOutputDesc(outputDesc);
-        if (StringUtils.isNotBlank(inputData)){
-            String newCasePathIn = fileProperties.getCaseInPath() + "/" + testcase.getProblemId() + "/" + UUID.randomUUID().toString().replace("-", "") + ".text";
-            try(FileOutputStream inOutputStream = new FileOutputStream(newCasePathIn)){
+        problemCaseMapper.update(dbTestcase);
+        if (inputData != null){
+            try(FileOutputStream inOutputStream = new FileOutputStream( testcase.getInputPath());){
                 IoUtil.writeUtf8(inOutputStream, true, inputData);
             }catch (Exception e){
                 throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);
             }
-            dbTestcase.setInputPath(newCasePathIn);
         }
-        if (StringUtils.isNotBlank(outputData)){
-            String newCasePathOut = fileProperties.getCaseOutPath() + "/" + testcase.getProblemId() + "/" + UUID.randomUUID().toString().replace("-", "") + ".text";
-            try(FileOutputStream OutOutputStream = new FileOutputStream(testcase.getOutputPath())){
+        if (outputData != null){
+            try(FileOutputStream OutOutputStream = new FileOutputStream( testcase.getOutputPath());){
                 IoUtil.writeUtf8(OutOutputStream, true, outputData);
             }catch (Exception e){
                 throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);
             }
-            dbTestcase.setOutputPath(newCasePathOut);
-        }
-        int result = problemCaseMapper.update(dbTestcase);
-        if (result != 1) {
-            if (dbTestcase.getInputPath() != null) FileUtil.del(dbTestcase.getInputPath());
-            if (dbTestcase.getOutputPath() != null) FileUtil.del(dbTestcase.getOutputPath());
-            throw new BaseException(ProblemConstants.TESTCASE_UPDATE_ERROR);
         }
     }
 }

@@ -8,8 +8,15 @@
         UPDATE tags set name = #{name} where id = #{id}
     </update>
     <delete id="delete">
-        DELETE tags
+        DELETE FROM tags
         WHERE id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteProblemTag">
+        DELETE FROM problem_tags
+        WHERE tag_id in
         <foreach collection="ids" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

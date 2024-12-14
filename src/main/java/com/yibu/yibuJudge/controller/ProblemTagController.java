@@ -31,9 +31,9 @@ public class ProblemTagController {
 
     @CheckAuth
     @DeleteMapping("/delete/{ids}")
-    public Result<List<Tag>> delete(@PathVariable("ids") List<Integer> ids, @RequestParam(required = false) Boolean force){
-        List<Tag> tags = tagService.delete(ids, force);
-        return Result.success(tags);
+    public Result<Void> delete(@PathVariable("ids") List<Integer> ids){
+        tagService.delete(ids);
+        return Result.success();
     }
 
 

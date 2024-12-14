@@ -4,7 +4,7 @@
     <insert id="insertBatch">
         INSERT INTO testcases (problem_id, input_path, input_desc, output_path, output_desc)
         VALUES
-        <foreach collection="list" item="item" separator=",">
+        <foreach collection="testcaseList" item="item" separator=",">
             (#{item.problemId}, #{item.inputPath}, #{item.inputDesc}, #{item.outputPath}, #{item.outputDesc})
         </foreach>
     </insert>

@@ -117,4 +117,11 @@
         from problems p
         where p.id = #{id}
     </select>
+    <select id="getProblemByTitle" resultType="com.yibu.yibuJudge.model.entity.Problem">
+        select id from  problems where
+        title in
+        <foreach collection="titles" item="title" open="(" separator="," close=")">
+            #{title}
+        </foreach>
+    </select>
 </mapper>

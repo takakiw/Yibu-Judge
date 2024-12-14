@@ -36,4 +36,6 @@ public interface ProblemMapper {
     void deleteProblemTags(@Param("problemId") Integer problemId);
 
     void setAuthPublicByIds(@Param("ids") List<Integer> ids);
+
+    List<Problem> getProblemByTitle(@Param("titles") List<String> titles);
 }

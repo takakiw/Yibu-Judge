@@ -26,8 +26,10 @@ public class CodeTemplateService {
         }
         CodeTemplate codeTemplate = templateMapper.getProblemCodeTemplateByProblemId(problemId, langId);
         CodeTemplateVO codeTemplateVO = BeanUtil.copyProperties(codeTemplate, CodeTemplateVO.class);
-        String useLanguage = templateMapper.getLanguageById(langId).getName();
-        codeTemplateVO.setLanguage(useLanguage);
+        if (codeTemplateVO!= null) {
+            String useLanguage = templateMapper.getLanguageById(langId).getName();
+            codeTemplateVO.setLanguage(useLanguage);
+        }
         return codeTemplateVO;
     }
 

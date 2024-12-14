@@ -29,4 +29,6 @@ public class ProblemConstants {
 
     public static final Integer PROBLEM_AUTH_PRIVATE = 1;
     public static final Object PROBLEM_AUTH_CONTEST = 2;
+    public static final String TESTCASE_PROBLEM_ID_NULL_ERROR = "Testcase problem id is null";
+    public static final String PROBLEM_TITLE_EXIST = "Problem title already exists";
 }

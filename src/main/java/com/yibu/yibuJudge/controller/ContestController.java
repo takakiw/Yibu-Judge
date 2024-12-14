@@ -76,8 +76,8 @@ public class ContestController {
 
     @GetMapping("/rank/{contestId}") // 获取排行榜
     public Result<PageBean<ContestLeaderboardVO>> getRank(@PathVariable("contestId") Integer contestId,
-                                                          @RequestParam("page") Integer page,
-                                                          @RequestParam("size") Integer size) {
+                                                          @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                                          @RequestParam(value = "size", required = false, defaultValue = "5") Integer size) {
 
         List<ContestLeaderboard> rankList = contestService.getRankList(contestId, page, size);
         List<User> users = userService.getUsers(rankList.stream().map(ContestLeaderboard::getUserId).toList());

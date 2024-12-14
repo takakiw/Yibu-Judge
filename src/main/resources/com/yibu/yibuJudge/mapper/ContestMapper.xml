@@ -61,16 +61,18 @@
         SELECT * FROM contest
         <where>
             <if test="preparation == true">
-                start_time &lt;= NOW()
-            </if>
-            <if test="preparation == false">
                 end_time &gt;= NOW()
             </if>
+            <if test="preparation == false">
+                end_time &lt;= NOW()
+            </if>
         </where>
-        order by start_time desc;
+        order by start_time asc
     </select>
     <select id="getRankListByContestId" resultType="com.yibu.yibuJudge.model.entity.ContestLeaderboard">
-        select * from contest_leaderboard
+        select id, contest_id, user_id, score, finish_time, details, create_time, update_time, penalty,
+        RANK() OVER (PARTITION BY contest_id ORDER BY score DESC, finish_time ASC) as `rank`
+        from contest_leaderboard
         <where>
             <if test="contestId!= null">
                 contest_id = #{contestId}
@@ -79,6 +81,8 @@
         order by score desc, finish_time asc
     </select>
     <select id="getRankByContestIdAndUserId" resultType="com.yibu.yibuJudge.model.entity.ContestLeaderboard">
-        select * from contest_leaderboard where contest_id = #{contestId} and user_id = #{userId}
+        select id, contest_id, user_id, score, finish_time, details, create_time, update_time, penalty,
+               RANK() OVER (PARTITION BY contest_id ORDER BY score DESC, finish_time ASC) as `rank`
+        from contest_leaderboard where contest_id = #{contestId} and user_id = #{userId}
     </select>
 </mapper>

@@ -31,4 +31,6 @@ public class ContestLeaderboard implements Serializable {
     private LocalDateTime createTime; // 创建时间
 
     private Long penalty; // 罚时
+
+    private Integer rank; // 排名, 非数据库字段
 }

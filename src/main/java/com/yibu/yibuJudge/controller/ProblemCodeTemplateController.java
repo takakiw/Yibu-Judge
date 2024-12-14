@@ -17,28 +17,28 @@ public class ProblemCodeTemplateController {
         this.templateService = templateService;
     }
 
-    @GetMapping("/template/{id}")
-    public Result<CodeTemplateVO> getProblemTemplate(@PathVariable("id") Integer id, @RequestParam(value = "langId", defaultValue = "1") Integer langId) {
+    @GetMapping("/{problemId}")
+    public Result<CodeTemplateVO> getProblemTemplate(@PathVariable("problemId") Integer id, @RequestParam(value = "langId", defaultValue = "1") Integer langId) {
         CodeTemplateVO templateVO = templateService.getProblemCodeTemplate(id, langId);
         return Result.success(templateVO);
     }
 
     @CheckAuth
-    @PostMapping("/template")
+    @PostMapping("/save")
     public Result<Void> saveProblemTemplate(@RequestBody CodeTemplateDTO codeTemplateDTO) {
         templateService.saveCodeTemplate(codeTemplateDTO.getProblemId(), codeTemplateDTO.getLanguageId(), codeTemplateDTO.getTemplateCode());
         return Result.success();
     }
 
     @CheckAuth
-    @PutMapping("/template")
+    @PutMapping("/update")
     public Result<Void> updateProblemTemplate(@RequestBody CodeTemplateDTO codeTemplateDTO) {
         templateService.updateCodeTemplate(codeTemplateDTO.getId(), codeTemplateDTO.getLanguageId(), codeTemplateDTO.getTemplateCode());
         return Result.success();
     }
 
     @CheckAuth
-    @DeleteMapping("/template/{id}")
+    @DeleteMapping("/{id}")
     public Result<Void> deleteProblemTemplate(@PathVariable("id") Integer id) {
         templateService.deleteCodeTemplate(id);
         return Result.success();

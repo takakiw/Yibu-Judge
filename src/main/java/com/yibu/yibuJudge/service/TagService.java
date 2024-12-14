@@ -34,27 +34,14 @@ public class TagService {
         return id;
     }
 
-    public List<Tag> delete(List<Integer> ids, Boolean force) {
+    @Transactional
+    public void delete(List<Integer> ids) {
         if (ids == null || ids.size() == 0){
-            return null;
+            return;
         }
-        if (!force){
-            List<Tag> tags = tagMapper.getUseingTag(ids);
-            if (tags!= null && tags.size() > 0){
-                return tags;
-            }
-            int delete = tagMapper.delete(ids);
-            if (delete!= ids.size()){
-                throw new BaseException(ProblemConstants.DELETE_TAG_FAILED);
-            }
-            return null;
-        }else{
-            int delete = tagMapper.delete(ids);
-            if (delete!= ids.size()){
-                throw new BaseException(ProblemConstants.DELETE_TAG_FAILED);
-            }
-            return null;
-        }
+        System.out.println("delete tag ids: " + ids);
+        tagMapper.delete(ids);
+        tagMapper.deleteProblemTag(ids);
     }
 
     public void update(TagDTO tag) {

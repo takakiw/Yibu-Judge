@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class TestcaseDTO {
     private Long id;
-    @NotNull(message = "题目ID不能为空")
     private Integer problemId;
     @NotBlank(message = "输入数据不能为空")
     private String inputData;

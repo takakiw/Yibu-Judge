@@ -47,8 +47,8 @@ public interface ContestMapper {
     List<ContestProblems> getContestProblemIds(Integer contestId);
 
 
-    @Delete("select c.start_time, c.end_time from contest_problems cl left join contest c on cl.contest_id = c.id where problem_id = #{problemId}")
-    Contest getContestByProblemId(Integer problemId);
+    @Select("select c.start_time, c.end_time from contest_problems cl left join contest c on cl.contest_id = c.id where problem_id = #{problemId}")
+    Contest getContestByProblemId(@Param("problemId") Integer problemId);
 
     @Select("select problem_order, score from contest_problems where contest_id = #{contestId} and problem_id = #{problemId}")
     ContestProblems getContestProblem(Integer contestId, Integer problemId);
@@ -56,4 +56,7 @@ public interface ContestMapper {
     void updateContestRank(@Param("userId") Long userId, @Param("problemId") Integer problemId, @Param("contestId") Integer contestId,
                            @Param("score") Integer score, @Param("problemOrder") Integer problemOrder, @Param("time") String time,
                            @Param("penaltyTime") String penaltyTime, @Param("penalty") long penalty, @Param("interval") long interval, @Param("warnCount") int warnCount);
+
+    @Select("select name from contest where name = #{name}")
+    Contest getContestTitle(@Param("name") String name);
 }

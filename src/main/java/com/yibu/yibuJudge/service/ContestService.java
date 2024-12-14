@@ -35,10 +35,6 @@ public class ContestService {
 
     @Transactional
     public void createContest(ContestDTO contestDTO) {
-        // 获取题目列表
-        List<ProblemDTO> problems = contestDTO.getProblems();
-        // 保存题目
-        List<Integer> problemIds = problemService.addProblems(problems);
         // 保存比赛
         Contest dbContest = new Contest(
                 null,
@@ -50,10 +46,19 @@ public class ContestService {
                 LocalDateTime.now(),
                 LocalDateTime.now()
         );
+        Contest existingContest = contestMapper.getContestTitle(contestDTO.getName());
+        if (existingContest!= null) {
+            throw new BaseException("比赛名称已存在");
+        }
         int result = contestMapper.insertContest(dbContest);
         if (result == 0) {
             throw new RuntimeException("创建比赛失败");
         }
+        // 获取题目列表
+        List<ProblemDTO> problems = contestDTO.getProblems();
+        // 保存题目
+        List<Integer> problemIds = problemService.addProblems(problems);
+
         Integer contestId = dbContest.getId();
         // 保存比赛题目关系
         List<ContestProblems> contestProblemsList = new ArrayList<>();
@@ -70,9 +75,6 @@ public class ContestService {
             contestProblemsList.add(contestProblems);
         }
         result = contestMapper.insertContestProblems(contestProblemsList);
-        if (result != problemIds.size()) {
-            throw new RuntimeException("创建比赛题目关系失败");
-        }
     }
 
     @Transactional
@@ -143,7 +145,8 @@ public class ContestService {
                 null,
                 LocalDateTime.now(),
                 LocalDateTime.now(),
-                0L);
+                0L,
+                null);
         int result = contestMapper.insertContestLeaderboard(dbContestLeaderboard);
         if (result == 0) {
             throw new BaseException("注册比赛失败");

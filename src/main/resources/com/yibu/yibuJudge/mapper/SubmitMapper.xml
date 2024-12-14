@@ -18,7 +18,7 @@
         COUNT(*) AS totalSubmissions,
         SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) AS acCount
         FROM submit
-        WHERE user_id = #{userId} AND problem_id IN
+        WHERE user_id = #{uid} AND problem_id IN
         <foreach collection="problemIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

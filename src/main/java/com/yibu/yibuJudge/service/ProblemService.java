@@ -14,6 +14,7 @@ import com.yibu.yibuJudge.model.dto.ProblemDTO;
 import com.yibu.yibuJudge.model.entity.*;
 import com.yibu.yibuJudge.model.vo.ProblemVO;
 import com.yibu.yibuJudge.model.vo.TestcaseVO;
+import com.yibu.yibuJudge.properties.FileProperties;
 import com.yibu.yibuJudge.utils.BaseContext;
 import com.yibu.yibuJudge.utils.SubmitStatusUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,18 +45,21 @@ public class ProblemService {
     private final TagService tagService;
 
     private final CodeTemplateService codeTemplateService;
+    private final FileProperties fileProperties;
 
     public ProblemService(ProblemMapper problemMapper,
                           SubmitService submitService,
                           ProblemCaseService problemCaseService,
                           ContestMapper contestMapper, TagService tagsService,
-                          CodeTemplateService codeTemplateService) {
+                          CodeTemplateService codeTemplateService,
+                          FileProperties fileProperties) {
         this.problemMapper = problemMapper;
         this.submitService = submitService;
         this.problemCaseService = problemCaseService;
         this.contestMapper = contestMapper;
         this.tagService = tagsService;
         this.codeTemplateService = codeTemplateService;
+        this.fileProperties = fileProperties;
     }
 
     public Page<ProblemPage> getProblemList(int page, int size, List<String> tags, String title, String order, String sort) {
@@ -65,14 +69,14 @@ public class ProblemService {
         order = (order == null || (!order.equals("difficulty") && !order.equals("id"))) ? "id" : order;
         sort = (sort == null || (!sort.equalsIgnoreCase("DESC") && !sort.equalsIgnoreCase("ASC"))) ? "ASC" : sort.toUpperCase();
         PageHelper.startPage(page, size);
-        Page<ProblemPage> problemList = problemMapper.getProblemList(tags, tags.size(), title, order, sort);
+        Page<ProblemPage> problemList = problemMapper.getProblemList(tags, tags == null ? 0: tags.size(), title, order, sort);
         // 判断提交状态
         List<Integer> id_list = problemList.stream().map(ProblemPage::getId).toList();
         if (uid!= null && !id_list.isEmpty()){
             Map<Integer, SubmitStatus> submit_status = submitService.submitStatus(id_list, uid);
             for (ProblemPage problem : problemList) {
                 SubmitStatus submitStatus = submit_status.getOrDefault(problem.getId(), new SubmitStatus());
-                problem.setStatus(SubmitStatusUtil.getProblemStatus(submitStatus.getAcCount(), submitStatus.getTotalSubmissions()));
+                problem.setStatus(submitStatus == null? 0 : SubmitStatusUtil.getProblemStatus(submitStatus.getAcCount(), submitStatus.getTotalSubmissions()));
             }
         }
         return problemList;
@@ -121,19 +125,30 @@ public class ProblemService {
         // 判断提交状态
         if (uid!= null){
             SubmitStatus submitStatus = submitService.submitStatus(List.of(id), uid).get(id);
-            problemVO.setStatus(SubmitStatusUtil.getProblemStatus(submitStatus.getAcCount(), submitStatus.getTotalSubmissions()));
+            problemVO.setStatus(submitStatus == null ? 0 : SubmitStatusUtil.getProblemStatus(submitStatus.getAcCount(), submitStatus.getTotalSubmissions()));
         }
         return problemVO;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public List<Integer> addProblems(List<ProblemDTO> problems) {
-        List<Integer> ids = new ArrayList<>();
-        for (ProblemDTO problemDTO : problems) {
-            Integer id = addProblem(problemDTO);
-            ids.add(id);
+        List<Problem> existProblem = problemMapper.getProblemByTitle(problems.stream().map(ProblemDTO::getTitle).toList());
+        if (!existProblem.isEmpty()){
+            throw new BaseException(ProblemConstants.PROBLEM_TITLE_EXIST);
         }
-        return ids;
+        try{
+            List<Integer> ids = new ArrayList<>();
+            for (ProblemDTO problemDTO : problems) {
+                Integer id = addProblem(problemDTO);
+                ids.add(id);
+            }
+            return ids;
+        }finally {
+            for (ProblemDTO problemDTO : problems){
+                FileUtil.del(fileProperties.getCaseInPath() + "/" + problemDTO.getId());
+                FileUtil.del(fileProperties.getCaseOutPath() + "/" + problemDTO.getId());
+            }
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -175,6 +190,9 @@ public class ProblemService {
             codeTemplate.setTemplateCode(problemDTO.getCodeTemplate().getTemplateCode());
             codeTemplateService.saveCodeTemplate(id, problemDTO.getCodeTemplate().getLanguageId(), problemDTO.getCodeTemplate().getTemplateCode());
         }
+        problemDTO.getTestcases().forEach(testcase -> {
+            testcase.setProblemId(id);
+        });
         problemCaseService.insertBatch(problemDTO.getTestcases());
         return id;
     }
