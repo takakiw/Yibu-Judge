@@ -17,17 +17,17 @@ spring:
             enable: true
   data:
     redis:
-      host: redis
+      host: 192.168.96.128
       port: 6379
       database: 0
       password:
   datasource:
-    url: jdbc:mysql://mysql:3306/yibu_judge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/yibu_judge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
     username: root
     password: qq123321
     driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq:
-    host: rabbitmq
+    host: 192.168.96.128
     port: 5672
     username: root
     password: root

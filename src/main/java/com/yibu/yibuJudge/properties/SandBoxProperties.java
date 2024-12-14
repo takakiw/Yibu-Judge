@@ -1,5 +1,7 @@
 package com.yibu.yibuJudge.properties;
 
+import cn.hutool.core.io.FileUtil;
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -59,5 +61,10 @@ public class SandBoxProperties {
 
     public void setDefaultMaxRealTime(String defaultMaxRealTime) {
         this.defaultMaxRealTime = defaultMaxRealTime;
+    }
+
+    @PostConstruct
+    public void init() {
+        FileUtil.mkParentDirs(logPath); // 在启动时创建日志目录
     }
 }

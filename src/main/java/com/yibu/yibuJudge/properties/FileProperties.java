@@ -1,5 +1,7 @@
 package com.yibu.yibuJudge.properties;
 
+import cn.hutool.core.io.FileUtil;
+import jakarta.annotation.PostConstruct;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -72,5 +74,16 @@ public class FileProperties {
     }
     public void setTempErrPath(String tempErrPath) {
         this.tempErrPath = tempErrPath;
+    }
+
+    @PostConstruct
+    public void initDirectories() {
+        FileUtil.mkdir(caseInPath);
+        FileUtil.mkdir(caseOutPath);
+        FileUtil.mkdir(buildPath);
+        FileUtil.mkdir(codePath);
+        FileUtil.mkdir(tempCasePath);
+        FileUtil.mkdir(tempOutPath);
+        FileUtil.mkdir(tempErrPath);
     }
 }

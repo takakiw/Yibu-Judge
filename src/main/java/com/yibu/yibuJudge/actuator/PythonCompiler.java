@@ -111,6 +111,7 @@ public class PythonCompiler implements Compiler {
     public String saveCode(String code) {
         String codeSource = UUID.randomUUID().toString().replace("-", "") + ".py";
         String reaSaveCodePath = fileProperties.getCodePath() + "/" + codeSource;
+        FileUtil.mkParentDirs(reaSaveCodePath);
         try(FileOutputStream fileOutputStream = new FileOutputStream(reaSaveCodePath)){
             IoUtil.writeUtf8(fileOutputStream, false, code);
         }catch (Exception e){
