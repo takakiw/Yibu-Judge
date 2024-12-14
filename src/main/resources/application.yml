@@ -1,0 +1,86 @@
+server:
+  port: 8080
+
+spring:
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 2918628219@qq.com
+    password: nyjvorcwkyswdgid
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+  data:
+    redis:
+      host: redis
+      port: 6379
+      database: 0
+      password:
+  datasource:
+    url: jdbc:mysql://mysql:3306/yibu_judge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    username: root
+    password: qq123321
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: root
+    password: root
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: auto # 自动确认消息
+        retry:
+          enabled: true # 开启重试机制
+          initial-interval: 1000ms # 重试间隔时间
+          max-attempts: 3 # 最大重试次数
+          multiplier: 2 # 重试间隔倍数
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-handlers-package: com.yibu.yibujudge.utils
+
+
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    access-key-id: LTAI5tR64ErFkg1w3By38uta
+    access-key-secret: Zz3z9qW70dtpeD7BqhxfPAi8eyMHIe
+    bucket-name: yibu-judger
+
+file:
+  case-in-path: /judge/file/case/in # 存放输入文件的路径
+  case-out-path: /judge/file/case/out # 存放输出文件的路径
+  build-path: /judge/file/build # 存放编译后的可执行文件路径
+  code-path: /judge/file/code # 存放源代码的路径
+  temp-case-path: /judge/file/temp/case # 存放临时输入文件的路径
+  temp-out-path: /judge/file/temp/out # 存放临时输出文件的路径
+  temp-err-path: /judge/file/temp/err # 存放临时错误信息文件的路径
+
+exec:
+  gcc: /usr/bin/gcc
+  gpp: /usr/bin/g++
+  java: /usr/bin/java
+  javac: /usr/bin/javac
+  python3: /usr/bin/python3
+
+
+sandbox:
+  default-max-memory: 536870912    # 512MB
+  default-max-outputSize: 1048576   # 1MB
+  exe-path: /usr/lib/judger/libjudger.so
+  log-path: /judge/log/judger.log
+  default-max-cpu-time: 1000        # 1000ms
+  default-max-real-time: 2000       # 2000ms
+
+
+judge:
+  judge-queue: judge-queue
+  result-queue: result-queue

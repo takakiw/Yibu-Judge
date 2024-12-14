@@ -4,3 +4,5 @@
 
 
 /.idea/
+/target/
+/src/test/java/com/yibu/yibuJudge/
