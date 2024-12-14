@@ -6,6 +6,7 @@ import com.yibu.yibuJudge.mapper.TagMapper;
 import com.yibu.yibuJudge.model.dto.TagDTO;
 import com.yibu.yibuJudge.model.entity.Tag;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,12 +19,15 @@ public class TagService {
         this.tagMapper = tagMapper;
     }
 
+    @Transactional
     public Integer add(String name) {
         Tag tag = tagMapper.getTagByName(name);
         if (tag!= null){
             throw new BaseException(ProblemConstants.TAG_ALREADY_EXISTS);
         }
-        Integer id = tagMapper.insert(name);
+        Tag dbTag = new Tag(null, name);
+        tagMapper.insert(dbTag);
+        Integer id = dbTag.getId();
         if (id == null){
             throw new BaseException(ProblemConstants.ADD_TAG_FAILED);
         }
@@ -43,13 +47,14 @@ public class TagService {
             if (delete!= ids.size()){
                 throw new BaseException(ProblemConstants.DELETE_TAG_FAILED);
             }
+            return null;
         }else{
             int delete = tagMapper.delete(ids);
             if (delete!= ids.size()){
                 throw new BaseException(ProblemConstants.DELETE_TAG_FAILED);
             }
+            return null;
         }
-        return null;
     }
 
     public void update(TagDTO tag) {

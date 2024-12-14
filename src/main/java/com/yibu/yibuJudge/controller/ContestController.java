@@ -1,6 +1,7 @@
 package com.yibu.yibuJudge.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.yibu.yibuJudge.annotation.CheckAuth;
 import com.yibu.yibuJudge.model.dto.ContestDTO;
 import com.yibu.yibuJudge.model.entity.Contest;
 import com.yibu.yibuJudge.model.entity.ContestLeaderboard;
@@ -31,12 +32,14 @@ public class ContestController {
         this.userService = userService;
     }
 
+    @CheckAuth
     @PostMapping("/create") // 创建竞赛
     public Result<Void> createContest(@RequestBody @Valid ContestDTO contestDTO) {
         contestService.createContest(contestDTO);
         return Result.success();
     }
 
+    @CheckAuth
     @PutMapping("/update") // 更新竞赛
     public Result<Void> updateContest(@RequestBody ContestDTO contestDTO) {
         contestService.updateContest(
@@ -49,6 +52,7 @@ public class ContestController {
         return Result.success();
     }
 
+    @CheckAuth
     @DeleteMapping("/del/{contestId}") // 删除竞赛
     public Result<Void> deleteContest(@PathVariable("contestId") Integer contestId,
                                       @RequestParam(value = "force", required = false, defaultValue = "false") Boolean force) {

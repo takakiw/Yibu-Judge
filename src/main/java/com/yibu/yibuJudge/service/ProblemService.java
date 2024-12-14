@@ -206,6 +206,7 @@ public class ProblemService {
         }
     }
 
+    @Transactional
     public void updateProblem(Integer id, String title, String description, String inputDesc,
                               String outputDesc, Long timeLimit, Long memoryLimit, Integer difficulty, Integer auth) {
         if (id == null){

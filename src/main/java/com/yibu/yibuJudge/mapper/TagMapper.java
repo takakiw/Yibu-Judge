@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface TagMapper {
-    Integer insert(String name);
+    int insert(Tag name);
 
     @Select("SELECT * FROM tags WHERE name = #{name}")
     Tag getTagByName(@Param("name") String name);

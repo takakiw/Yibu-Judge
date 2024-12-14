@@ -21,7 +21,6 @@ public class GlobalException {
 
     @ExceptionHandler(BaseException.class)
     public Result<String> handleBaseExceptions(BaseException ex) {
-        ex.printStackTrace();
         return Result.error(ex.getMessage());
     }
 
@@ -32,7 +31,6 @@ public class GlobalException {
 
     @ExceptionHandler(Exception.class)
     public Result<String> err(Exception e){
-        e.printStackTrace();
         return Result.error();
     }
 }

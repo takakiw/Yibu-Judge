@@ -22,7 +22,7 @@ public class GlobalInterceptor implements HandlerInterceptor {
             try{
                 Map<String, Object> map = JWTUtil.parseJwt(token);
                 request.setAttribute(UserConstant.ROLE, map.get(UserConstant.ROLE));
-                BaseContext.setCurrentId(Long.parseLong(map.get(UserConstant.USER_ID).toString()));
+                BaseContext.setCurrentId((Long) map.get(UserConstant.USER_ID));
             }catch (Exception e){
                 return true;
             }

@@ -1,5 +1,6 @@
 package com.yibu.yibuJudge.controller;
 
+import com.yibu.yibuJudge.annotation.CheckAuth;
 import com.yibu.yibuJudge.model.dto.TagDTO;
 import com.yibu.yibuJudge.model.entity.Tag;
 import com.yibu.yibuJudge.model.response.Result;
@@ -21,12 +22,14 @@ public class ProblemTagController {
         this.tagService = tagService;
     }
 
+    @CheckAuth
     @PostMapping("/add")
     public Result<Integer> add(@RequestBody @Valid TagDTO tagDTO){
         Integer id = tagService.add(tagDTO.getName());
         return Result.success(id);
     }
 
+    @CheckAuth
     @DeleteMapping("/delete/{ids}")
     public Result<List<Tag>> delete(@PathVariable("ids") List<Integer> ids, @RequestParam(required = false) Boolean force){
         List<Tag> tags = tagService.delete(ids, force);
@@ -34,6 +37,7 @@ public class ProblemTagController {
     }
 
 
+    @CheckAuth
     @PutMapping("/update")
     public Result<Void> update(@RequestBody @Valid TagDTO tag){
         tagService.update(tag);

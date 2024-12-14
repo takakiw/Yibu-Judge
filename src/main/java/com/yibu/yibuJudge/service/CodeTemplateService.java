@@ -32,7 +32,7 @@ public class CodeTemplateService {
     }
 
 
-    @Transactional
+
     public void saveCodeTemplate(Integer problemId, Integer languageId, String templateCode) {
         if (problemId == null || languageId == null || templateCode == null){
             throw new BaseException(ProblemConstants.PARAM_ERROR);
@@ -52,7 +52,6 @@ public class CodeTemplateService {
         }
     }
 
-    @Transactional
     public void updateCodeTemplate(Integer id, Integer languageId, String templateCode) {
         CodeTemplate codeTemplate = templateMapper.getProblemCodeTemplateById(id);
         if (codeTemplate == null){

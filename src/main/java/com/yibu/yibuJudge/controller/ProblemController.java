@@ -1,6 +1,7 @@
 package com.yibu.yibuJudge.controller;
 
 import com.github.pagehelper.Page;
+import com.yibu.yibuJudge.annotation.CheckAuth;
 import com.yibu.yibuJudge.model.dto.ProblemDTO;
 import com.yibu.yibuJudge.model.entity.Language;
 import com.yibu.yibuJudge.model.entity.ProblemPage;
@@ -47,21 +48,21 @@ public class ProblemController {
         return Result.success(problemVO);
     }
 
-    // todo: 权限注解, 待实现, 判断当前用户是否有权限修改该题目 @CheckAuth
+    @CheckAuth
     @PostMapping("/add")
     public Result<Void> addProblem(@RequestBody @Valid ProblemDTO problemDTO) {
         problemService.addProblem(problemDTO);
         return Result.success();
     }
 
-    // todo: 权限注解, 待实现, 判断当前用户是否有权限修改该题目 @CheckAuth
+    @CheckAuth
     @DeleteMapping("/{ids}")
     public Result<Void> deleteProblem(@PathVariable("ids") List<Integer> ids) {
         problemService.deleteProblem(ids);
         return Result.success();
     }
 
-    // todo: 权限注解, 待实现, 判断当前用户是否有权限修改该题目 @CheckAuth
+    @CheckAuth
     @PutMapping("/update")
     public Result<Void> updateProblem(@RequestBody ProblemDTO problemDTO) {
         problemService.updateProblem(problemDTO.getId(),
@@ -76,6 +77,7 @@ public class ProblemController {
         return Result.success();
     }
 
+    @CheckAuth
     @PutMapping("/update/tags")
     public Result<Void> updateProblemTags(@RequestBody ProblemDTO problemDTO) {
         problemService.updateProblemTags(problemDTO.getId(), problemDTO.getTagIds());
