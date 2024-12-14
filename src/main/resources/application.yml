@@ -22,7 +22,7 @@ spring:
       database: 0
       password:
   datasource:
-    url: jdbc:mysql://localhost:3306/yibu_judge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
+    url: jdbc:mysql://localhost:3306/yibu_judge?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: qq123321
     driver-class-name: com.mysql.cj.jdbc.Driver

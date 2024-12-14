@@ -1,0 +1,83 @@
+services:
+  mysql:
+    image: mysql:8.0.23
+    networks:
+      - yb-net
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/mysql/mysql-files:/var/lib/mysql-files
+      - ./data/mysql/conf:/etc/mysql
+      - ./data/mysql/logs:/var/log/mysql
+      - ./data/mysql/data:/var/lib/mysql
+      - ./data/mysql/init.d:/docker-entrypoint-initdb.d
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci"
+      ]
+    healthcheck:
+      test:
+        [
+          "CMD", "mysqladmin", "ping", "--host=localhost", "--user=root", "--password=root"
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+  redis:
+    image: redis:latest
+    networks:
+      - yb-net
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    networks:
+      - yb-net
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "node_health_check"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  judge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: judge
+    networks:
+      - yb-net
+    ports:
+      - 8080:8080
+    volumes:
+      - ./data/judge/file:/judge/file
+      - ./data/judge/log:/judge/log
+
+    environment:
+      RABBITMQ_PASSWORD: root
+      TZ: Asia/Shanghai
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+networks:
+  yb-net:
