@@ -73,7 +73,6 @@ services:
       - ./data/judge/log:/judge/log
 
     environment:
-      RABBITMQ_PASSWORD: root
       TZ: Asia/Shanghai
     depends_on:
       - mysql

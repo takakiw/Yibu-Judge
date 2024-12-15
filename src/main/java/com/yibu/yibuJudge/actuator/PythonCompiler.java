@@ -65,9 +65,11 @@ public class PythonCompiler implements Compiler {
                     String inputPath = inputPaths.get(finalI);
                     String[] commandStr = args.getCommandStr(
                             execProperties.getPython3(),
-                            fileProperties.getBuildPath() + "/" + args.getBuildName(),
+                            List.of("-BS", fileProperties.getBuildPath() + "/" + args.getBuildName()),
                             inputPath,
-                            finalI
+                            finalI,
+                            "general",
+                            null
                     );
                     log.info("[exec] {}", String.join(" ", commandStr));
                     Process exec = Runtime.getRuntime().exec(commandStr);

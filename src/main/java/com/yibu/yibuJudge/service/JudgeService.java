@@ -181,8 +181,8 @@ public class JudgeService {
             for (int i = 0; i < commandResultList.size(); i++) {
                 CommandResult commandResult = commandResultList.get(i);
                 Testcase testcase = testcases.get(i);
-                // 累积 CPU 时间和内存
-                judgeResult.setCpuTime(judgeResult.getCpuTime() + commandResult.getCpuTime());
+                // 时间和内存
+                judgeResult.setCpuTime(Math.max(judgeResult.getCpuTime(), commandResult.getCpuTime())); // 最大 CPU 时间
                 judgeResult.setMemory(Math.max(judgeResult.getMemory(), commandResult.getMemory())); // 最大内存
                 // 判断运行结果
                 Error error = Error.fromCode(commandResult.getError());

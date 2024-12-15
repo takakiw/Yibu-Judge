@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
@@ -81,9 +82,15 @@ public class JavaCompiler implements Compiler {
                     String inputPath = inputPaths.get(finalI);
                     String[] commandStr = args.getCommandStr(
                             execProperties.getJava(),
-                            "-cp " + fileProperties.getBuildPath() + "/" + args.getBuildName(),
+                            List.of("-cp",fileProperties.getBuildPath() + "/" + args.getBuildName(),
+                                    "-XX:MaxRAM=" + args.getMaxMemory(),
+                                    "-Djava.security.manager",
+                                    "-Dfile.encoding=UTF-8",
+                                    "-Djava.awt.headless=true", "Main"),
                             inputPath,
-                            finalI
+                            finalI,
+                            null,
+                            Map.of("memory_limit_check_only", "1", "max_memory", "-1")
                     );
                     log.info("[exec] {}", String.join(" ", commandStr));
                     Process exec = Runtime.getRuntime().exec(commandStr);

@@ -79,7 +79,9 @@ public class CPPCompiler implements Compiler {
                             fileProperties.getBuildPath() + "/" + args.getBuildName(),
                             null,
                             inputPath,
-                            finalI
+                            finalI,
+                            "c_cpp",
+                            null
                     );
                     log.info("[exec] {}", String.join(" ", commandStr));
                     Process exec = Runtime.getRuntime().exec(commandStr);

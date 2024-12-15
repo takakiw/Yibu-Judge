@@ -4,7 +4,9 @@ import cn.hutool.core.io.FileUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @Data
@@ -27,20 +29,48 @@ public class CommandArgs {
     }
 
 
-    public String[] getCommandStr(String exePath, String args, String inputPath, int i){
+    public String[] getCommandStr(String exePath, List<String> args, String inputPath, int i, String seccompRuleName, Map<String, String> kwargs) {
+        // 创建动态参数列表
+        List<String> command = new ArrayList<>();
 
-        return new String[]{
-                "sudo",
-                executablePath,
-                "--max_cpu_time=" + maxCpuTime,
-                "--max_real_time=" + maxRealTime,
-                "--exe_path=" + exePath,
-                "--args=" + args,
-                "--input_path=" + inputPath,
-                "--output_path=" + outputPath + "/" + i + ".txt",
-                "--error_path=" + errorPath + "/" + i + ".txt",
-                "--log_path=" + logPath
-        };
+        // 固定的基础参数
+        command.add(executablePath);
+        command.add("--max_cpu_time=" + maxCpuTime);
+        command.add("--max_real_time=" + maxRealTime);
+        command.add("--exe_path=" + exePath);
+        command.add("--max_output_size=" + maxOutputSize);
+
+
+        if (args != null && !args.isEmpty()) {
+            for (String arg : args) {
+                command.add("--arg=" + arg);
+            }
+        }
+
+        if (inputPath != null && !inputPath.trim().isEmpty()) {
+            command.add("--input_path=" + inputPath);
+        }
+
+
+        command.add("--output_path=" + outputPath + "/" + i + ".txt");
+        command.add("--error_path=" + errorPath + "/" + i + ".txt");
+        command.add("--log_path=" + logPath);
+
+
+        if (seccompRuleName != null && !seccompRuleName.trim().isEmpty()) {
+            command.add("--seccomp_rule_name=" + seccompRuleName);
+        }
+
+        if (kwargs != null && !kwargs.isEmpty()) {
+            for (String key : kwargs.keySet()) {
+                command.add("--" + key + "=" + kwargs.get(key));
+            }
+        }else {
+            command.add("--max_memory=" + maxMemory);
+        }
+
+
+        return command.toArray(new String[0]);
     }
 
     public String getRealOutputPath(int i){
