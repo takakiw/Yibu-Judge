@@ -21,11 +21,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+
     - name: Run Checkstyle
       run: mvn checkstyle:checkstyle
 
     - name: Run PMD
       run: mvn pmd:check
-
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
