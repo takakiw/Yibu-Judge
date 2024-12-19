@@ -12,4 +12,8 @@ public class CodeTemplateDTO {
     private Integer problemId;
     private Integer languageId;
     private String templateCode;
+               private String Outersa_sa;
+    public void setOutersa_sa(String Outersa_sa){
+        this.Outersa_sa = Outersa_sa;
+    }
 }
