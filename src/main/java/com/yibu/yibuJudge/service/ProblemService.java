@@ -21,7 +21,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +51,7 @@ public class ProblemService {
                           ProblemCaseService problemCaseService,
                           ContestMapper contestMapper, TagService tagsService,
                           CodeTemplateService codeTemplateService,
-                          FileProperties fileProperties) {
+                          FileProperties fileProperties, HttpServletRequest request) {
         this.problemMapper = problemMapper;
         this.submitService = submitService;
         this.problemCaseService = problemCaseService;
@@ -60,14 +59,15 @@ public class ProblemService {
         this.tagService = tagsService;
         this.codeTemplateService = codeTemplateService;
         this.fileProperties = fileProperties;
+        this.request = request;
     }
 
     public Page<ProblemPage> getProblemList(int page, int size, List<String> tags, String title, String order, String sort) {
         Long uid = BaseContext.getCurrentId();
-        page = (page <= 0) ? 1 : page;
-        size = (size <= 0 || size > 100) ? 10 : size;
-        order = (order == null || (!order.equals("difficulty") && !order.equals("id"))) ? "id" : order;
-        sort = (sort == null || (!sort.equalsIgnoreCase("DESC") && !sort.equalsIgnoreCase("ASC"))) ? "ASC" : sort.toUpperCase();
+        page = page <= 0 ? 1 : page;
+        size = size <= 0 || size > 100 ? 10 : size;
+        order = order == null || (!order.equals("difficulty") && !order.equals("id")) ? "id" : order;
+        sort = sort == null || (!sort.equalsIgnoreCase("DESC") && !sort.equalsIgnoreCase("ASC")) ? "ASC" : sort.toUpperCase();
         PageHelper.startPage(page, size);
         Page<ProblemPage> problemList = problemMapper.getProblemList(tags, tags == null ? 0: tags.size(), title, order, sort);
         // 判断提交状态
@@ -82,8 +82,7 @@ public class ProblemService {
         return problemList;
     }
 
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     public ProblemVO getProblem(Integer id) {
         Long uid = BaseContext.getCurrentId();
@@ -190,9 +189,9 @@ public class ProblemService {
             codeTemplate.setTemplateCode(problemDTO.getCodeTemplate().getTemplateCode());
             codeTemplateService.saveCodeTemplate(id, problemDTO.getCodeTemplate().getLanguageId(), problemDTO.getCodeTemplate().getTemplateCode());
         }
-        problemDTO.getTestcases().forEach(testcase -> {
-            testcase.setProblemId(id);
-        });
+        problemDTO.getTestcases().forEach(testcase ->
+            testcase.setProblemId(id)
+        );
         problemCaseService.insertBatch(problemDTO.getTestcases());
         return id;
     }
