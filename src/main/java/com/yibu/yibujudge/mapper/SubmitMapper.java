@@ -1,7 +1,11 @@
 package com.yibu.yibujudge.mapper;
 
 import com.github.pagehelper.Page;
-import com.yibu.yibujudge.model.entity.*;
+import com.yibu.yibujudge.model.entity.SubmitPage;
+import com.yibu.yibujudge.model.entity.Submit;
+import com.yibu.yibujudge.model.entity.SubmitStatus;
+import com.yibu.yibujudge.model.entity.SubmitHeat;
+import com.yibu.yibujudge.model.entity.Language;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
