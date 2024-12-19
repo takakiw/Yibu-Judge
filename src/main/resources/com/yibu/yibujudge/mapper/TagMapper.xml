@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yibu.yibujudge.mapper.TagMapper">
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tags (name) values (#{name})
+    </insert>
+    <update id="update">
+        UPDATE tags set name = #{name} where id = #{id}
+    </update>
+    <delete id="delete">
+        DELETE FROM tags
+        WHERE id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteProblemTag">
+        DELETE FROM problem_tags
+        WHERE tag_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getUseingTag" resultType="com.yibu.yibujudge.model.entity.Tag">
+        SELECT DISTINCT t.name
+        FROM tags t
+                 JOIN problem_tags pt ON t.id = pt.tag_id where t.id in
+                 <foreach collection="ids" item="id" open="(" separator="," close=")">
+                     #{id}
+                 </foreach>
+    </select>
+    <select id="getTagIdByIds" resultType="java.lang.Integer">
+        select id from tags where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+</mapper>

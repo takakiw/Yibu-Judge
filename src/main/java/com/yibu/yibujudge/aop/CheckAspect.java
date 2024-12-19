@@ -1,0 +1,35 @@
+package com.yibu.yibujudge.aop;
+
+import com.yibu.yibujudge.constant.UserConstant;
+import com.yibu.yibujudge.exceptions.BaseException;
+import com.yibu.yibujudge.utils.BaseContext;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Aspect
+@Component
+public class CheckAspect {
+
+    private final HttpServletRequest request;
+
+    public CheckAspect(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    @Pointcut("@annotation(com.yibu.yibujudge.annotation.CheckAuth)")
+    public void cut() { }
+
+    @Before("cut()")
+    public void before() {
+        Integer role = (Integer) request.getAttribute(UserConstant.ROLE);
+        if (role == null || role.compareTo(UserConstant.ROLE_ADMIN) != 0) {
+            log.info("userId:{},role:{}", BaseContext.getCurrentId(), role);
+            throw new BaseException("权限不足");
+        }
+    }
+}

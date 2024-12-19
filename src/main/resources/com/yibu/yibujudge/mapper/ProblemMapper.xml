@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yibu.yibujudge.mapper.ProblemMapper">
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO problems (title, description, input_desc, output_desc, time_limit, memory_limit, difficulty, auth, data_range)
+        VALUES (#{title}, #{description}, #{inputDesc}, #{outputDesc}, #{timeLimit}, #{memoryLimit}, #{difficulty}, #{auth}, #{dataRange})
+    </insert>
+    <insert id="saveProblemTags">
+        insert into problem_tags (problem_id, tag_id)
+        values
+        <foreach collection="tagIds" item="tagId" separator=",">
+            (#{tagId}, #{id})
+        </foreach>
+    </insert>
+    <update id="update">
+        UPDATE problems
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="inputDesc != null and inputDesc != ''">
+                input_desc = #{inputDesc},
+            </if>
+            <if test="outputDesc != null and outputDesc != ''">
+                output_desc = #{outputDesc},
+            </if>
+            <if test="timeLimit != null">
+                time_limit = #{timeLimit},
+            </if>
+            <if test="memoryLimit != null">
+                memory_limit = #{memoryLimit},
+            </if>
+            <if test="difficulty != null">
+                difficulty = #{difficulty},
+            </if>
+            <if test="auth != null">
+                auth = #{auth}
+            </if>
+            <if test="dataRange != null">
+                data_range = #{dataRange}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    <update id="setAuthPublicByIds">
+        UPDATE problems
+        SET auth = 0
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deleteProblemBatch">
+        DELETE FROM problems
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteProblemTags">
+        delete from problem_tags where problem_id = #{problemId}
+    </delete>
+    <select id="getProblemList" resultType="com.yibu.yibujudge.model.entity.ProblemPage">
+        SELECT
+        p.id,
+        p.title,
+        p.difficulty,
+        p.accepted_count,
+        p.submit_count
+        FROM problems p
+        <where>
+            <if test="tags != null and tags.size() > 0">
+                EXISTS (
+                SELECT 1
+                FROM problem_tags pt_sub
+                JOIN tags t_sub ON pt_sub.tag_id = t_sub.id
+                WHERE pt_sub.problem_id = p.id
+                AND t_sub.name IN
+                <foreach collection="tags" item="tag" open="(" separator="," close=")">
+                    #{tag}
+                </foreach>
+                GROUP BY pt_sub.problem_id
+                HAVING COUNT(DISTINCT t_sub.name) >= #{tagSize}
+                )
+            </if>
+            <if test="title != null">
+                AND p.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            and p.auth = 0
+        </where>
+        ORDER BY
+        <choose>
+            <when test="order == 'difficulty'">
+                p.difficulty
+            </when>
+            <otherwise>
+                p.id
+            </otherwise>
+        </choose>
+        <if test="sort == null or sort == ''">
+            ASC
+        </if>
+        <if test="sort != null and (sort == 'DESC' or sort == 'ASC')">
+            ${sort}
+        </if>
+    </select>
+    <select id="getProblemById" resultType="com.yibu.yibujudge.model.entity.Problem">
+        select p.*,
+               (SELECT GROUP_CONCAT(t.name ORDER BY t.name)
+                FROM problem_tags pt
+                         JOIN tags t ON pt.tag_id = t.id
+                WHERE pt.problem_id = p.id) AS tags
+        from problems p
+        where p.id = #{id}
+    </select>
+    <select id="getProblemByTitle" resultType="com.yibu.yibujudge.model.entity.Problem">
+        select id from  problems where
+        title in
+        <foreach collection="titles" item="title" open="(" separator="," close=")">
+            #{title}
+        </foreach>
+    </select>
+</mapper>

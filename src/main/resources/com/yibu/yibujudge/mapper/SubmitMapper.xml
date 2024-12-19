@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yibu.yibujudge.mapper.SubmitMapper">
+    <insert id="insert">
+        insert into submit (id, user_id, problem_id, contest_id, status, lang_id, submit_time)
+        VALUES (#{id}, #{userId}, #{problemId}, #{contestId}, #{status}, #{langId}, #{submitTime})
+    </insert>
+    <delete id="deleteSubmitByProblemIds">
+        delete from submit
+        where problem_id in
+        <foreach collection="problemIds" item="problemId" open="(" separator="," close=")">
+            #{problemId}
+        </foreach>
+    </delete>
+    <select id="getSubmitStatusByProblemIds" resultType="com.yibu.yibujudge.model.entity.SubmitStatus">
+        SELECT
+        problem_id,
+        COUNT(*) AS totalSubmissions,
+        SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) AS acCount
+        FROM submit
+        WHERE user_id = #{uid} AND problem_id IN
+        <foreach collection="problemIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY problem_id;
+    </select>
+
+</mapper>

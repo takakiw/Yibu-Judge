@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yibu.yibujudge.mapper.ProblemCaseMapper">
+    <insert id="insertBatch">
+        INSERT INTO testcases (problem_id, input_path, input_desc, output_path, output_desc)
+        VALUES
+        <foreach collection="testcaseList" item="item" separator=",">
+            (#{item.problemId}, #{item.inputPath}, #{item.inputDesc}, #{item.outputPath}, #{item.outputDesc})
+        </foreach>
+    </insert>
+    <update id="update">
+        update testcases
+        <set>
+            <if test="inputPath != null and inputPath != ''">
+                input_path = #{inputPath},
+            </if>
+            <if test="inputDesc != null and inputDesc != ''">
+                input_desc = #{inputDesc},
+            </if>
+            <if test="outputPath != null and outputPath != ''">
+                output_path = #{outputPath},
+            </if>
+            <if test="outputDesc != null and outputDesc != ''">
+                output_desc = #{outputDesc}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTestCasesByProblemIds">
+        DELETE FROM testcases
+        WHERE problem_id in
+        <foreach collection="problemIds" item="problemId" open="(" separator="," close=")">
+            #{problemId}
+        </foreach>
+    </delete>
+    <delete id="deleteTestCasesByIds">
+        delete from testcases
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getTestCasesByProblemIdBatch" resultType="com.yibu.yibujudge.model.entity.Testcase">
+        select id, input_path, output_path from testcases
+        where problem_id in
+        <foreach collection="problemIds" item="problemId" open="(" separator="," close=")">
+            #{problemId}
+        </foreach>
+    </select>
+    <select id="getTestCasesByProblemId" resultType="com.yibu.yibujudge.model.entity.Testcase">
+        SELECT * FROM testcases WHERE problem_id = #{id} order by id
+        <if test="limit != -1">
+            LIMIT #{limit}
+        </if>
+    </select>
+</mapper>

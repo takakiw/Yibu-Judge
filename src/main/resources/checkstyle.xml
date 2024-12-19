@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <!-- 文件长度不超过1500行 -->
+    <module name="FileLength">
+        <property name="max" value="1500"/>
+    </module>
+
+    <!-- 每个java文件一个语法树 -->
+    <module name="TreeWalker">
+        <!-- import检查-->
+        <!-- 检查是否从非法的包中导入了类 -->
+        <module name="IllegalImport"/>
+        <!-- 检查是否导入了多余的包 -->
+        <module name="RedundantImport"/>
+        <!-- 没用的import检查，比如：1.没有被用到2.重复的3.import java.lang的4.import 与该类在同一个package的 -->
+        <module name="UnusedImports" />
+
+        <!-- 注释检查 -->
+        <module name="JavadocType">
+            <property name="allowUnknownTags" value="true"/>
+            <message key="javadoc.missing" value="类注释：缺少Javadoc注释。"/>
+        </module>
+
+        <!-- 命名检查 -->
+        <module name="LocalFinalVariableName" />
+        <module name="LocalVariableName" />
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$" />
+            <message key="name.invalidPattern" value="包名 ''{0}'' 要符合 ''{1}''格式."/>
+        </module>
+        <module name="StaticVariableName" />
+        <module name="TypeName">
+            <property name="severity" value="warning"/>
+            <message key="name.invalidPattern" value="名称 ''{0}'' 要符合 ''{1}''格式."/>
+        </module>
+        <module name="MemberName" />
+        <module name="MethodName" />
+        <module name="ParameterName " />
+        <module name="ConstantName" />
+        <module name="ArrayTypeStyle"/>
+        <module name="UpperEll"/>
+
+        <!-- 方法长度检查 -->
+        <module name="MethodLength">
+            <property name="tokens" value="METHOD_DEF" />
+            <property name="max" value="200" />
+        </module>
+
+        <!-- 方法参数检查 -->
+        <module name="ParameterNumber">
+            <property name="max" value="10" />
+            <property name="ignoreOverriddenMethods" value="true"/>
+            <property name="tokens" value="METHOD_DEF" />
+        </module>
+
+        <!-- 空格检查-->
+        <module name="MethodParamPad" />
+        <module name="TypecastParenPad" />
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
+
+        <!-- 修饰符检查 -->
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <!-- 代码块检查 -->
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
+
+        <!-- 代码检查 -->
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="HiddenField">
+            <property name="tokens" value="VARIABLE_DEF"/>
+        </module>
+        <module name="InnerAssignment"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+
+        <!-- 类设计检查 -->
+        <module name="FinalClass"/>
+        <module name="InterfaceIsType"/>
+        <module name="VisibilityModifier">
+            <property name="packageAllowed" value="true"/>
+            <property name="protectedAllowed" value="true"/>
+        </module>
+
+        <!-- 语法 -->
+        <module name="StringLiteralEquality"/>
+        <module name="NestedForDepth">
+            <property name="max" value="2"/>
+        </module>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="UncommentedMain">
+            <property name="excludedClasses" value=".*[Application,Test]$"/>
+        </module>
+        <module name="Regexp">
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
+        </module>
+        <module name="ReturnCount">
+            <property name="max" value="10"/>
+        </module>
+        <module name="NestedTryDepth ">
+            <property name="max" value="3"/>
+        </module>
+        <module name="SuperClone" />
+        <module name="SuperFinalize" />
+    </module>
+
+    <!-- 长度检查 -->
+    <!-- 每行不超过140个字符 -->
+    <module name="LineLength">
+        <property name="max" value="160" />
+    </module>
+
+</module>
