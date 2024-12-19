@@ -7,7 +7,6 @@ import com.yibu.yibuJudge.mapper.CodeTemplateMapper;
 import com.yibu.yibuJudge.model.entity.CodeTemplate;
 import com.yibu.yibuJudge.model.vo.CodeTemplateVO;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

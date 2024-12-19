@@ -18,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -44,7 +43,7 @@ public class ProblemCaseService {
             return;
         }
         List<Testcase> testcaseList = new ArrayList<>();
-        int i = 0;
+        int i;
         Integer problemId = testcases.get(0).getProblemId();
         if (problemId == null){
             throw new BaseException(ProblemConstants.TESTCASE_PROBLEM_ID_NULL_ERROR);
@@ -154,14 +153,14 @@ public class ProblemCaseService {
         if (StringUtils.isNotBlank(outputDesc)) dbTestcase.setOutputDesc(outputDesc);
         problemCaseMapper.update(dbTestcase);
         if (inputData != null){
-            try(FileOutputStream inOutputStream = new FileOutputStream( testcase.getInputPath());){
+            try(FileOutputStream inOutputStream = new FileOutputStream( testcase.getInputPath())){
                 IoUtil.writeUtf8(inOutputStream, true, inputData);
             }catch (Exception e){
                 throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);
             }
         }
         if (outputData != null){
-            try(FileOutputStream OutOutputStream = new FileOutputStream( testcase.getOutputPath());){
+            try(FileOutputStream OutOutputStream = new FileOutputStream( testcase.getOutputPath())){
                 IoUtil.writeUtf8(OutOutputStream, true, outputData);
             }catch (Exception e){
                 throw new BaseException(ProblemConstants.TESTCASE_SAVE_ERROR);

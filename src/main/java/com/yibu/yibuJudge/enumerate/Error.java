@@ -33,7 +33,7 @@ public enum Error {
 
     // 根据 code 值获取 Error
     public static Error fromCode(int code) {
-        for (Error error : Error.values()) {
+        for (Error error : values()) {
             if (error.getCode() == code) {
                 return error;
             }

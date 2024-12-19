@@ -30,7 +30,7 @@ public enum Result {
 
     // 根据 code 值获取 Result
     public static Result fromCode(int code) {
-        for (Result result : Result.values()) {
+        for (Result result : values()) {
             if (result.getCode() == code) {
                 return result;
             }

@@ -74,7 +74,7 @@ public class ContestService {
                     null);
             contestProblemsList.add(contestProblems);
         }
-        result = contestMapper.insertContestProblems(contestProblemsList);
+        contestMapper.insertContestProblems(contestProblemsList);
     }
 
     @Transactional

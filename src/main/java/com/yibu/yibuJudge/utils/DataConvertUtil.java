@@ -3,7 +3,7 @@ package com.yibu.yibuJudge.utils;
 public class DataConvertUtil {
     public static String getTime(long interval) {
         long hour = interval / 3600;
-        long minute = (interval % 3600) / 60;
+        long minute = interval % 3600 / 60;
         long second = interval % 60;
         String time = "";
         if (hour > 0) {

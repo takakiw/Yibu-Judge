@@ -37,6 +37,6 @@ public class JWTUtil {
         Map<String, Object> mp = new HashMap<>();
         mp.put(UserConstant.USER_ID, user.getId());
         mp.put(UserConstant.ROLE, user.getRole());
-        return JWTUtil.generateJwt(mp);
+        return generateJwt(mp);
     }
 }

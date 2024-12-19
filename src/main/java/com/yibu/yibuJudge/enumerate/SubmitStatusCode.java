@@ -31,7 +31,7 @@ public enum SubmitStatusCode {
 
 
     public static SubmitStatusCode getSubmitStatusCodeByJudgeStatusCode(int judgeCode) {
-        for (SubmitStatusCode submitStatusCode : SubmitStatusCode.values()) {
+        for (SubmitStatusCode submitStatusCode : values()) {
             if (submitStatusCode.getJudgeCode() == judgeCode) {
                 return submitStatusCode;
             }

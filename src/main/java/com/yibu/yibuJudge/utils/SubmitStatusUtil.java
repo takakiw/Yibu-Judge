@@ -9,6 +9,6 @@ public class SubmitStatusUtil {
     public static int getProblemStatus(Integer submitACCount, Integer submitCount) {
         submitCount = submitCount == null? 0 : submitCount;
         submitACCount = submitACCount == null? 0 : submitACCount;
-        return submitACCount > 0? SUBMIT_STATUS_AC : (submitCount > 0? SUBMIT_STATUS_NOT_AC : SUBMIT_STATUS_NONE);
+        return submitACCount > 0? SUBMIT_STATUS_AC : submitCount > 0? SUBMIT_STATUS_NOT_AC : SUBMIT_STATUS_NONE;
     }
 }
