@@ -12,17 +12,17 @@ public class WebMVCConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new GlobalInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/user/register");
+                。addPathPatterns("/**")
+                。excludePathPatterns("/user/login", "/user/register");
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOriginPatterns("*") // 使用 allowedOriginPatterns 替代 allowedOrigins
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .exposedHeaders("Authorization")
-                .allowCredentials(true); // 允许携带凭证
+                。allowedOriginPatterns("*") 
+                。allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                。allowedHeaders("*")
+                。exposedHeaders("Authorization")
+                。allowCredentials(true); 
     }
 }
