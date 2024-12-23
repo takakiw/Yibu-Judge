@@ -12,17 +12,17 @@ public class WebMVCConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new GlobalInterceptor())
-                。addPathPatterns("/**")
-                。excludePathPatterns("/user/login", "/user/register");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/login", "/user/register");
     }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                。allowedOriginPatterns("*") 
-                。allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                。allowedHeaders("*")
-                。exposedHeaders("Authorization")
-                。allowCredentials(true); 
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .exposedHeaders("Authorization")
+                .allowCredentials(true);
     }
 }
