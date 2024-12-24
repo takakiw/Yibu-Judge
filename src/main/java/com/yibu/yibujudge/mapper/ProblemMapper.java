@@ -7,6 +7,7 @@ import com.yibu.yibujudge.model.entity.ProblemPage;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -39,4 +40,7 @@ public interface ProblemMapper {
     void setAuthPublicByIds(@Param("ids") List<Integer> ids);
 
     List<Problem> getProblemByTitle(@Param("titles") List<String> titles);
+
+    @Update("update problems set submit_count = submit_count + 1, accepted_count = accepted_count + #{i} where id = #{problemId}")
+    void updateSubmitCount(@Param("problemId") Integer problemId, @Param("isAccepted") int isAccepted);
 }

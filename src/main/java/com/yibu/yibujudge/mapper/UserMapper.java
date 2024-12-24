@@ -4,6 +4,7 @@ import com.yibu.yibujudge.model.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -26,4 +27,7 @@ public interface UserMapper {
     User getUserByUserNam(@Param("username") String username);
 
     List<User> getUserByIds(List<Long> ids);
+
+    @Update("update user set submit_count = submit_count + 1, ac_count = ac_count + #{isAccepted} where id = #{userId}")
+    void updateSubmitCount(@Param("userId") Long userId, @Param("isAccepted") int isAccepted);
 }

@@ -14,6 +14,7 @@ import com.yibu.yibujudge.exceptions.BaseException;
 import com.yibu.yibujudge.mapper.ContestMapper;
 import com.yibu.yibujudge.mapper.ProblemMapper;
 import com.yibu.yibujudge.mapper.SubmitMapper;
+import com.yibu.yibujudge.mapper.UserMapper;
 import com.yibu.yibujudge.model.entity.Contest;
 import com.yibu.yibujudge.model.entity.Language;
 import com.yibu.yibujudge.model.entity.Problem;
@@ -63,12 +64,15 @@ public class SubmitService {
 
     private final ContestMapper contestMapper;
 
+    private final UserMapper userMapper;
+
     public SubmitService(SubmitMapper submitMapper,
                          ProblemCaseService problemCaseService, JudgeService judgeService,
                          SubmitCacheService submitCacheService,
                          ProblemMapper problemMapper,
                          RabbitTemplate rabbitTemplate,
-                         ContestMapper contestMapper) {
+                         ContestMapper contestMapper,
+                         UserMapper userMapper) {
         this.submitMapper = submitMapper;
         this.problemCaseService = problemCaseService;
         this.judgeService = judgeService;
@@ -76,6 +80,7 @@ public class SubmitService {
         this.problemMapper = problemMapper;
         this.rabbitTemplate = rabbitTemplate;
         this.contestMapper = contestMapper;
+        this.userMapper = userMapper;
     }
 
     public Map<Integer, SubmitStatus> submitStatus(List<Integer> problemIds, Long uid) {
@@ -219,6 +224,12 @@ public class SubmitService {
         dbSubmit.setMemory(judgeResult.getMemory());
         dbSubmit.setResultMessage(judgeResult.getMessage());
         submitMapper.updateSubmitResult(dbSubmit);
+        if (statusCode == SubmitStatusCode.ACCEPTED){
+            // 更新题目提交数
+            problemMapper.updateSubmitCount(submit.getProblemId(), 1);
+            // 更新用户提交数
+            userMapper.updateSubmitCount(submit.getUserId(), 1);
+        }
         if (submit.getContestId() != null && statusCode == SubmitStatusCode.ACCEPTED) { // 竞赛题目, 只有ac才更新排名
             List<SubmitStatus> submitStatusList = submitMapper.getSubmitStatusByProblemIds(List.of(submit.getProblemId()), submit.getUserId());
             SubmitStatus status = submitStatusList.get(0);
