@@ -159,7 +159,7 @@ public class UserService {
         }
     }
 
-    public void updateAvatar(Long uid, MultipartFile file) {
+    public String updateAvatar(Long uid, MultipartFile file) {
         Boolean lock = cacheService.lock("avatar" + uid, 3000);
         if (!lock) {
             throw new BaseException(UserConstant.REQUEST_FREQUENTLY);
@@ -182,6 +182,7 @@ public class UserService {
                 throw new BaseException(UserConstant.UPDATE_ERROR);
             }
             cacheService.deleteUser(uid);
+            return newAvatarUrl;
         } catch (IOException e) {
             throw new BaseException(UserConstant.UPLOAD_ERROR);
         } finally {

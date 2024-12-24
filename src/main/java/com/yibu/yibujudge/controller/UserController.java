@@ -76,12 +76,12 @@ public class UserController {
     }
 
     @PostMapping("/update/avatar")
-    public Result<Void> updateAvatar(MultipartFile file) {
+    public Result<String> updateAvatar(MultipartFile file) {
         Long uid = BaseContext.getCurrentId();
         if (uid == null) {
             return Result.refresh();
         }
-        userService.updateAvatar(uid, file);
-        return Result.success();
+        String newAvatarUrl =  userService.updateAvatar(uid, file);
+        return Result.success(newAvatarUrl);
     }
 }
