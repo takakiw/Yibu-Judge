@@ -219,7 +219,7 @@ public class SubmitService {
         dbSubmit.setId(submitId);
         dbSubmit.setCodePath(judgeResult.getCodePath());
         SubmitStatusCode statusCode = SubmitStatusCode.getSubmitStatusCodeByJudgeStatusCode(judgeResult.getStatus());
-        dbSubmit.setStatus(statusCode.getJudgeCode());
+        dbSubmit.setStatus(statusCode.getSubmitCode());
         dbSubmit.setRuntime(judgeResult.getCpuTime());
         dbSubmit.setMemory(judgeResult.getMemory());
         dbSubmit.setResultMessage(judgeResult.getMessage());

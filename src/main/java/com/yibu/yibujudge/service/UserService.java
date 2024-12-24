@@ -73,7 +73,7 @@ public class UserService {
                     default:
                         return;
                 }
-                message.setText(String.format(text, captcha));
+                message.setText(String.format(text, captcha), "text/plain; charset=UTF-8");
                 mailSender.send(message);
             } catch (MessagingException e) {
                 e.printStackTrace();
