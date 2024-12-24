@@ -224,7 +224,7 @@ public class SubmitService {
         dbSubmit.setMemory(judgeResult.getMemory());
         dbSubmit.setResultMessage(judgeResult.getMessage());
         submitMapper.updateSubmitResult(dbSubmit);
-        if (statusCode == SubmitStatusCode.ACCEPTED){
+        if (statusCode == SubmitStatusCode.ACCEPTED) {
             // 更新题目提交数
             problemMapper.updateSubmitCount(submit.getProblemId(), 1);
             // 更新用户提交数
