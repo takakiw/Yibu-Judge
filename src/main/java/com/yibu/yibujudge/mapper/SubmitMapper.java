@@ -17,7 +17,7 @@ import java.util.List;
 public interface SubmitMapper {
     List<SubmitStatus> getSubmitStatusByProblemIds(@Param("problemIds") List<Integer> problemIds, @Param("uid") Long uid);
 
-    @Select("SELECT s.id, s.status, s.runtime,s.submit_time, l.name as languageName "
+    @Select("SELECT s.id, s.status, s.runtime,s.submit_time, l.name as languageName , s.problem_id, s.memory "
             + "FROM submit s left join language l on s.lang_id = l.id "
             + "WHERE s.user_id = #{uid} AND s.problem_id = #{problemId} ORDER BY s.submit_time DESC")
     Page<SubmitPage> getSubmitByUidAndProblemId(@Param("uid") Long uid, @Param("problemId") Integer problemId);
@@ -25,7 +25,7 @@ public interface SubmitMapper {
     @Select("SELECT COUNT(*) FROM submit WHERE problem_id = #{problemId} AND user_id = #{uid}")
     Integer getSubmitCount(@Param("problemId") Integer problemId, @Param("uid") Long uid);
 
-    @Select("select s.id, s.status, s.runtime,s.submit_time, l.name as languageName "
+    @Select("select s.id, s.status, s.problem_id, s.runtime,s.submit_time, l.name as languageName, s.memory "
             + "from submit s left join language l on s.lang_id = l.id "
             + "where s.user_id = #{uid} order by s.submit_time desc")
     Page<SubmitPage> getRecentSubmit(@Param("uid") Long uid);

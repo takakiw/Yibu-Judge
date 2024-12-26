@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SubmitPage {
     private Long id;
+    private Integer problemId;
     private Integer status;
     // 非数据库字段，用于前端显示
     private String languageName;
