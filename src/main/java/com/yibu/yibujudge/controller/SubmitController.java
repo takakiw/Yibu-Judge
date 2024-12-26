@@ -27,9 +27,9 @@ public class SubmitController {
     }
 
     @GetMapping("/list/{problemId}")
-    public Result<PageBean<SubmitPage>> submitStatus(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                                     @RequestParam(required = false, defaultValue = "10")  Integer size,
-                                                     @PathVariable("problemId") Integer problemId) {
+    public Result<PageBean<SubmitPage>> submitList(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                                   @RequestParam(required = false, defaultValue = "10")  Integer size,
+                                                   @PathVariable("problemId") Integer problemId) {
         PageBean<SubmitPage> pageBean = submitService.getSubmitList(page, size, problemId);
         return Result.success(pageBean);
     }
