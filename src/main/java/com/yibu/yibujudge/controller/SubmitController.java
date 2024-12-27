@@ -7,6 +7,7 @@ import com.yibu.yibujudge.model.entity.SubmitPage;
 import com.yibu.yibujudge.model.response.JudgeResult;
 import com.yibu.yibujudge.model.response.PageBean;
 import com.yibu.yibujudge.model.response.Result;
+import com.yibu.yibujudge.model.vo.SubmitCountVO;
 import com.yibu.yibujudge.model.vo.SubmitVO;
 import com.yibu.yibujudge.service.SubmitService;
 import jakarta.validation.Valid;
@@ -82,4 +83,15 @@ public class SubmitController {
         return Result.success(submitVO);
     }
 
+
+    /**
+     * 获取用户提交记录数量(各个难度的通过数)
+     * @param userId
+     * @return
+     */
+    @GetMapping("/submit/count/{userId}")
+    public Result<SubmitCountVO> submitCountByUser(@PathVariable("userId") Long userId) {
+        SubmitCountVO submitCountVO = submitService.getSubmitCountByUser(userId);
+        return Result.success(submitCountVO);
+    }
 }

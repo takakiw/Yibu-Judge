@@ -43,4 +43,6 @@ public interface ProblemMapper {
 
     @Update("update problems set submit_count = submit_count + 1, accepted_count = accepted_count + #{i} where id = #{problemId}")
     void updateSubmitCount(@Param("problemId") Integer problemId, @Param("isAccepted") int isAccepted);
+
+    List<Problem> getProblemByIds(@Param("problemIds") List<Integer> problemIds);
 }

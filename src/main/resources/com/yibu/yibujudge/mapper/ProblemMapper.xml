@@ -124,4 +124,12 @@
             #{title}
         </foreach>
     </select>
+    <select id="getProblemByIds" resultType="com.yibu.yibujudge.model.entity.Problem">
+        SELECT * FROM problems
+        WHERE id IN
+        <foreach collection="problemIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by difficulty
+    </select>
 </mapper>

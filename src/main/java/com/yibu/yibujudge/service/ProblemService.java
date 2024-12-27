@@ -7,6 +7,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.yibu.yibujudge.constant.ProblemConstants;
 import com.yibu.yibujudge.constant.UserConstant;
+import com.yibu.yibujudge.enumerate.Difficulty;
 import com.yibu.yibujudge.exceptions.BaseException;
 import com.yibu.yibujudge.mapper.ContestMapper;
 import com.yibu.yibujudge.mapper.ProblemMapper;
@@ -164,6 +165,10 @@ public class ProblemService {
         problem.setOutputDesc(problemDTO.getOutputDesc());
         problem.setTimeLimit(problemDTO.getTimeLimit());
         problem.setMemoryLimit(problemDTO.getMemoryLimit());
+        boolean valid = Difficulty.isValid(problemDTO.getDifficulty());
+        if (!valid) {
+            throw new BaseException(ProblemConstants.PROBLEM_DIFFICULTY_ERROR);
+        }
         problem.setDifficulty(problemDTO.getDifficulty());
         problem.setAuth(problemDTO.getAuth());
         problem.setDataRange(problemDTO.getDataRange());

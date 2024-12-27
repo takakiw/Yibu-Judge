@@ -29,6 +29,7 @@ import com.yibu.yibujudge.model.mq.SubmitMQType;
 import com.yibu.yibujudge.model.response.JudgeResult;
 import com.yibu.yibujudge.model.response.PageBean;
 import com.yibu.yibujudge.model.response.Result;
+import com.yibu.yibujudge.model.vo.SubmitCountVO;
 import com.yibu.yibujudge.model.vo.SubmitVO;
 import com.yibu.yibujudge.utils.BaseContext;
 import com.yibu.yibujudge.utils.DataConvertUtil;
@@ -273,4 +274,19 @@ public class SubmitService {
         return BeanUtil.copyProperties(submit, SubmitVO.class);
     }
 
+    public SubmitCountVO getSubmitCountByUser(Long userId) {
+        // 获取用户提交数的ac数量
+        List<Integer> problemIds =  submitMapper.getAllAcceptedProblemIds(userId);
+        // 获取题目难度
+        List<Problem> problems =  problemMapper.getProblemByIds(problemIds);
+        SubmitCountVO submitCountVO = new SubmitCountVO();
+        if (problems == null || problems.isEmpty()) {
+            return submitCountVO;
+        }
+        submitCountVO.setSubmitCount(
+                problems.stream().collect(Collectors.groupingBy(Problem::getDifficulty, Collectors.counting())));
+        // 通过总数计算ac数量
+        submitCountVO.setAcCount(problemIds.size());
+        return submitCountVO;
+    }
 }
