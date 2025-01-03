@@ -34,7 +34,7 @@ public class ProblemController {
                                   @RequestParam(value = "difficulty", required = false) Integer difficulty,
                                   @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sort,
                                   @RequestParam(value = "order", required = false, defaultValue = "id") String order) {
-        Page<ProblemPage> pageList = problemService.getProblemList(page, size, tags, title, difficulty,order, sort);
+        Page<ProblemPage> pageList = problemService.getProblemList(page, size, tags, title, difficulty, order, sort);
         return Result.success(new PageBean<>(pageList.getTotal(), pageList.getResult()));
     }
 

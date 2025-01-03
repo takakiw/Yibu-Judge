@@ -225,7 +225,9 @@ public class SubmitService {
         dbSubmit.setRuntime(judgeResult.getCpuTime());
         dbSubmit.setMemory(judgeResult.getMemory());
         dbSubmit.setResultMessage(judgeResult.getMessage());
-        if (judgeResult.getCaseCount() != null) submit.setAcCount(judgeResult.getAcCaseCount() + "/" + judgeResult.getCaseCount());
+        if (judgeResult.getCaseCount() != null) {
+            submit.setAcCount(judgeResult.getAcCaseCount() + "/" + judgeResult.getCaseCount());
+        }
         submitMapper.updateSubmitResult(dbSubmit);
         if (statusCode == SubmitStatusCode.ACCEPTED) {
             // 更新题目提交数
