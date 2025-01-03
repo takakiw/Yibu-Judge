@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JudgeResultMQType {
+public class JudgeResultMQType implements Serializable {
 
     private Long submitId; // 提交ID
     private Integer contestId; // 比赛ID
