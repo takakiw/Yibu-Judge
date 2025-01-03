@@ -116,7 +116,6 @@ public class CPPCompiler implements Compiler {
     @Override
     public void deStory(String buildDir) {
         String buildPath = fileProperties.getBuildPath() + "/" + buildDir;
-        log.info("delete build file {}", buildPath);
         boolean del = FileUtil.del(buildPath);
         if (!del) {
             log.error("delete build file error {}", buildPath);

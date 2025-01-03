@@ -69,7 +69,6 @@ public class CCompiler implements Compiler {
         List<String> inputPaths = args.getInputPaths();
         List<CommandResult> results = new ArrayList<>();
         List<Future<CommandResult>> futures = new ArrayList<>();
-
         try {
             for (int i = 0; i < inputPaths.size(); i++) {
                 int finalI = i;
