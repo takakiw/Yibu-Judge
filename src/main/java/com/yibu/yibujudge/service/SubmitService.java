@@ -275,6 +275,9 @@ public class SubmitService {
             return null;
         }
         Submit submit = submitMapper.getSubmitById(id);
+        if (submit == null) {
+            throw new BaseException(SubmitConstants.ILLEGAL_REQUEST);
+        }
         return BeanUtil.copyProperties(submit, SubmitVO.class);
     }
 

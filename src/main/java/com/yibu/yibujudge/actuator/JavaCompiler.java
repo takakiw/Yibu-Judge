@@ -100,6 +100,7 @@ public class JavaCompiler implements Compiler {
                         throw new BaseException(Result.SYSTEM_ERROR.getMessage());
                     }
                     String data = IoUtil.readUtf8(exec.getInputStream());
+                    log.info("[result] {}", data);
                     CommandResult commandResult = JSONObject.parseObject(data, CommandResult.class);
                     commandResult.setOutputPath(args.getRealOutputPath(finalI));
                     commandResult.setErrorPath(args.getRealErrorPath(finalI));

@@ -13,9 +13,7 @@ public class JudgeResult implements Serializable {
     private int status;
     private String message;
     private String output;
-
     private String codePath;
-
     private Long cpuTime;
     private Long memory;
     private Long caseCount;

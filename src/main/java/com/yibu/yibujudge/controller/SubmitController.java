@@ -78,7 +78,9 @@ public class SubmitController {
     public Result<SubmitVO> resultApi(@RequestBody SubmitDTO submitDTO) {
         SubmitVO submitVO = submitService.resultApi(submitDTO.getId());
         if (submitVO == null) {
-            return Result.error(SubmitConstants.SUBMIT_WAITING);
+            SubmitVO nullSubmitVO = new SubmitVO();
+            nullSubmitVO.setStatus(0);
+            return Result.success(nullSubmitVO);
         }
         return Result.success(submitVO);
     }

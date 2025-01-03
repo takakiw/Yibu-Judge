@@ -45,7 +45,7 @@ public interface SubmitMapper {
     void deleteSubmitByProblemIds(@Param("problemIds") List<Integer> problemIds);
 
     @Update("update submit set status = #{status}, runtime = #{runtime}, memory = #{memory}, result_message = #{resultMessage}, code_path = #{codePath} "
-            + "where id = #{submitId}")
+            + "where id = #{id}")
     void updateSubmitResult(Submit dbSubmit);
 
     @Select("select problem_id from submit where status = 1 and user_id = #{userId} group by problem_id")
