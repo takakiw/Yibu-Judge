@@ -114,6 +114,8 @@ public class JudgeService {
                 } catch (Exception e) {
                     judgeResult.setOutput("");
                 }
+                judgeResult.setMemory(commandResult.getMemory());
+                judgeResult.setCpuTime(commandResult.getCpuTime());
                 return judgeResult;
             }
             judgeResult.setStatus(Result.SUCCESS.getCode());
@@ -123,6 +125,8 @@ public class JudgeService {
             } catch (FileNotFoundException e) {
                 throw new BaseException(Result.SYSTEM_ERROR.getMessage());
             }
+            judgeResult.setMemory(commandResult.getMemory());
+            judgeResult.setCpuTime(commandResult.getCpuTime());
             return judgeResult;
         } finally {
             FileUtil.del(tempInputPath);

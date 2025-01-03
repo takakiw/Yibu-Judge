@@ -14,6 +14,7 @@ public class SubmitVO {
     private Long userId;
     private Long problemId;
     private Integer status;
+    private String acCount;
     private String languageName;
     private Integer runtime;
     private Integer memory;

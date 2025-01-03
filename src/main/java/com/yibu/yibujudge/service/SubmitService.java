@@ -149,6 +149,7 @@ public class SubmitService {
         }
         // 调用judgeService进行调试
         JudgeResult judgeResult = judgeService.debug(language.getName(), code, inputData);
+        judgeResult.setStatus(SubmitStatusCode.getSubmitStatusCodeByJudgeStatusCode(judgeResult.getStatus()).getSubmitCode());
         return Result.success(judgeResult);
     }
 
@@ -194,7 +195,7 @@ public class SubmitService {
             throw new BaseException(SubmitConstants.ILLEGAL_REQUEST);
         }
         Long id = IdUtil.getSnowflake(1L, 1L).nextId();
-        Submit submit = new Submit(id, uid, problemId, contestId, 0, langId,
+        Submit submit = new Submit(id, uid, problemId, contestId, 0, null, langId,
                 language.getName(), null, null, null, null, LocalDateTime.now());
         int result = submitMapper.insert(submit);
         if (result == 0) {
@@ -224,6 +225,7 @@ public class SubmitService {
         dbSubmit.setRuntime(judgeResult.getCpuTime());
         dbSubmit.setMemory(judgeResult.getMemory());
         dbSubmit.setResultMessage(judgeResult.getMessage());
+        if (judgeResult.getCaseCount() != null) submit.setAcCount(judgeResult.getAcCaseCount() + "/" + judgeResult.getCaseCount());
         submitMapper.updateSubmitResult(dbSubmit);
         if (statusCode == SubmitStatusCode.ACCEPTED) {
             // 更新题目提交数

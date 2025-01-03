@@ -13,8 +13,8 @@ import java.util.List;
 
 @Mapper
 public interface ProblemMapper {
-    Page<ProblemPage> getProblemList(@Param("tags") List<String> tags, @Param("tagSize") int tagSize,
-                                     @Param("title") String title, @Param("order") String order, @Param("sort") String sort);
+    Page<ProblemPage> getProblemList(@Param("tags") List<String> tags, @Param("tagSize") int tagSize, @Param("title") String title,
+                                     @Param("difficulty") Integer difficulty, @Param("order") String order, @Param("sort") String sort);
 
     Problem getProblemById(@Param("id") Integer id);
 

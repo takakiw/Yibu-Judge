@@ -18,6 +18,7 @@ public class Submit implements Serializable {
     private Integer problemId;
     private Integer contestId;
     private Integer status;
+    private String acCount;
     private Integer langId;
     // 非数据库字段，用于前端显示
     private String languageName;

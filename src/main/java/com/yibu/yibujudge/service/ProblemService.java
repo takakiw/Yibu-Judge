@@ -69,14 +69,14 @@ public class ProblemService {
         this.request = request;
     }
 
-    public Page<ProblemPage> getProblemList(int page, int size, List<String> tags, String title, String order, String sort) {
+    public Page<ProblemPage> getProblemList(int page, int size, List<String> tags, String title, Integer difficulty, String order, String sort) {
         Long uid = BaseContext.getCurrentId();
         page = page <= 0 ? 1 : page;
         size = size <= 0 || size > 100 ? 10 : size;
         order = order == null || (!order.equals("difficulty") && !order.equals("id")) ? "id" : order;
         sort = sort == null || (!sort.equalsIgnoreCase("DESC") && !sort.equalsIgnoreCase("ASC")) ? "ASC" : sort.toUpperCase();
         PageHelper.startPage(page, size);
-        Page<ProblemPage> problemList = problemMapper.getProblemList(tags, tags == null ? 0 : tags.size(), title, order, sort);
+        Page<ProblemPage> problemList = problemMapper.getProblemList(tags, tags == null ? 0 : tags.size(), title, difficulty, order, sort);
         // 判断提交状态
         List<Integer> idList = problemList.stream().map(ProblemPage::getId).toList();
         if (uid != null && !idList.isEmpty()) {

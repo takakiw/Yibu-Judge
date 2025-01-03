@@ -26,13 +26,15 @@ public class ProblemController {
     }
 
     @GetMapping("/list")
-    public Result<PageBean<ProblemPage>> getProblemList(@RequestParam(value = "page", defaultValue = "1") int page,
+    public Result<PageBean<ProblemPage>> getProblemList(
+                                  @RequestParam(value = "page", defaultValue = "1") int page,
                                   @RequestParam(value = "size", defaultValue = "10") int size,
                                   @RequestParam(value = "title", required = false) String title,
                                   @RequestParam(value = "tags", required = false) List<String> tags,
+                                  @RequestParam(value = "difficulty", required = false) Integer difficulty,
                                   @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sort,
                                   @RequestParam(value = "order", required = false, defaultValue = "id") String order) {
-        Page<ProblemPage> pageList = problemService.getProblemList(page, size, tags, title, order, sort);
+        Page<ProblemPage> pageList = problemService.getProblemList(page, size, tags, title, difficulty,order, sort);
         return Result.success(new PageBean<>(pageList.getTotal(), pageList.getResult()));
     }
 

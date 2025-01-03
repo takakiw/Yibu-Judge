@@ -15,6 +15,7 @@ public class SubmitPage {
     private Integer status;
     // 非数据库字段，用于前端显示
     private String languageName;
+    private Integer langId;
     private Integer runtime;
     private Integer memory;
     private LocalDateTime submitTime;

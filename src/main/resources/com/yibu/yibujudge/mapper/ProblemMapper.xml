@@ -90,6 +90,9 @@
             <if test="title != null">
                 AND p.title LIKE CONCAT('%', #{title}, '%')
             </if>
+            <if test="difficulty != null">
+                AND p.difficulty = #{difficulty}
+            </if>
             and p.auth = 0
         </where>
         ORDER BY
