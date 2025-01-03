@@ -246,7 +246,7 @@ CREATE TABLE `submit` (
   `lang_id` int NOT NULL COMMENT '编程语言 ID，关联语言表',
   `runtime` int DEFAULT '0' COMMENT '运行时间（ms）',
   `memory` int DEFAULT '0' COMMENT '内存占用 bytes',
-  `code_path` varchar(300) NOT NULL COMMENT '用户提交的代码',
+  `code_path` varchar(300) COMMENT '用户提交的代码',
   `result_message` varchar(255) DEFAULT NULL COMMENT '判题结果信息',
   `submit_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '提交时间',
   PRIMARY KEY (`id`),
