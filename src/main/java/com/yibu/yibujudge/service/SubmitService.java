@@ -282,7 +282,10 @@ public class SubmitService {
         // 获取用户提交数的ac数量
         List<Integer> problemIds =  submitMapper.getAllAcceptedProblemIds(userId);
         // 获取题目难度
-        List<Problem> problems =  problemMapper.getProblemByIds(problemIds);
+        List<Problem> problems = null;
+        if (problemIds == null || problemIds.isEmpty()) {
+            problems = problemMapper.getProblemByIds(problemIds);
+        }
         SubmitCountVO submitCountVO = new SubmitCountVO();
         if (problems == null || problems.isEmpty()) {
             return submitCountVO;
