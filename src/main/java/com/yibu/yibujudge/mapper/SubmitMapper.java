@@ -44,7 +44,8 @@ public interface SubmitMapper {
 
     void deleteSubmitByProblemIds(@Param("problemIds") List<Integer> problemIds);
 
-    @Update("update submit set status = #{status}, runtime = #{runtime}, memory = #{memory}, result_message = #{resultMessage}, code_path = #{codePath} "
+    @Update("update submit set status = #{status}, runtime = #{runtime}, memory = #{memory}, result_message = #{resultMessage}," +
+            " code_path = #{codePath}, first_error_input = #{firstErrorInput}, first_error_output = #{firstErrorOutput} "
             + "where id = #{id}")
     void updateSubmitResult(Submit dbSubmit);
 

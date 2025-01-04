@@ -27,4 +27,5 @@ public class Submit implements Serializable {
     private String codePath;
     private String resultMessage;
     private LocalDateTime submitTime;
+    private String firstErrorInput, firstErrorOutput;
 }

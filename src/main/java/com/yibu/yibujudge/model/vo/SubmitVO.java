@@ -21,4 +21,5 @@ public class SubmitVO {
     private String code;
     private String resultMessage;
     private LocalDateTime submitTime;
+    private String firstErrorInput, firstErrorOutput;
 }

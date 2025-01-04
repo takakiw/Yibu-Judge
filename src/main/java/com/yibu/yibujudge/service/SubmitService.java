@@ -36,7 +36,6 @@ import com.yibu.yibujudge.utils.DataConvertUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +72,7 @@ public class SubmitService {
                          ProblemMapper problemMapper,
                          RabbitTemplate rabbitTemplate,
                          ContestMapper contestMapper,
-                         UserMapper userMapper) {
+                         UserMapper userMapper, HttpServletRequest request) {
         this.submitMapper = submitMapper;
         this.problemCaseService = problemCaseService;
         this.judgeService = judgeService;
@@ -82,6 +81,7 @@ public class SubmitService {
         this.rabbitTemplate = rabbitTemplate;
         this.contestMapper = contestMapper;
         this.userMapper = userMapper;
+        this.request = request;
     }
 
     public Map<Integer, SubmitStatus> submitStatus(List<Integer> problemIds, Long uid) {
@@ -153,8 +153,7 @@ public class SubmitService {
         return Result.success(judgeResult);
     }
 
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
 
     @Transactional
     public Long submit(Integer problemId, Integer langId, String code, Integer contestId) {
@@ -196,7 +195,8 @@ public class SubmitService {
         }
         Long id = IdUtil.getSnowflake(1L, 1L).nextId();
         Submit submit = new Submit(id, uid, problemId, contestId, 0, null, langId,
-                language.getName(), null, null, null, null, LocalDateTime.now());
+                language.getName(), null, null, null,
+                null, LocalDateTime.now(), null, null);
         int result = submitMapper.insert(submit);
         if (result == 0) {
             throw new BaseException(SubmitConstants.SYSTEM_ERROR);
@@ -225,6 +225,8 @@ public class SubmitService {
         dbSubmit.setRuntime(judgeResult.getCpuTime());
         dbSubmit.setMemory(judgeResult.getMemory());
         dbSubmit.setResultMessage(judgeResult.getMessage());
+        dbSubmit.setFirstErrorInput(truncatedStr(judgeResult.getFirstErrorCaseInput()));
+        dbSubmit.setFirstErrorOutput(truncatedStr(judgeResult.getFirstErrorYueOutput()));
         if (judgeResult.getCaseCount() != null) {
             submit.setAcCount(judgeResult.getAcCaseCount() + "/" + judgeResult.getCaseCount());
         }
@@ -263,6 +265,16 @@ public class SubmitService {
         submitCacheService.deleteSubmitRecord(submitId);
     }
 
+    private String truncatedStr(String str) {
+        if (str == null) {
+            return null;
+        }
+        if (str.length() > 200) {
+            return str.substring(0, 200);
+        }
+        return str;
+    }
+
     public void deleteSubmitByProblemIds(List<Integer> problemIds) {
         if (problemIds == null || problemIds.isEmpty()) {
             return;
@@ -296,7 +308,7 @@ public class SubmitService {
         submitCountVO.setSubmitCount(
                 problems.stream().collect(Collectors.groupingBy(Problem::getDifficulty, Collectors.counting())));
         // 通过总数计算ac数量
-        submitCountVO.setAcCount(problemIds.size());
+        submitCountVO.setAcCount(problemIds == null ? 0 : problemIds.size());
         return submitCountVO;
     }
 }
